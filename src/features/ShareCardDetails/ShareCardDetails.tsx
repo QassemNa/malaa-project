@@ -5,10 +5,22 @@ import { Button } from '@/components/ui/button.tsx';
 
 import { useGetUserPaymentCard } from '@/hooks/useGetUserPaymentCard.ts';
 
+import { useAppForm } from '@/config/tanstackForm.ts';
 import { PaymentCardSection } from '@/features/ShareCardDetails/components/PaymentCardSection.tsx';
 import { SharingDetails } from '@/features/ShareCardDetails/components/SharingDetails.tsx';
 
 export const ShareCardDetails = () => {
+  const form = useAppForm({
+    defaultValues: {
+      selectedAccountIds: [] as number[],
+      selectedCreditCardIds: [] as number[],
+    },
+    onSubmit: async ({ value }) => {
+      console.log('Selected accounts:', value.selectedAccountIds);
+      console.log('Selected credit cards:', value.selectedCreditCardIds);
+    },
+  });
+
   const { data } = useGetUserPaymentCard();
   return (
     <PageWrapper>
@@ -25,12 +37,46 @@ export const ShareCardDetails = () => {
       </p>
 
       <div className="mb-4" />
-      <PaymentCardSection
-        title={'Bank Accounts'}
-        paymentCards={data?.accounts}
-      />
+      <form.Field name="selectedAccountIds" mode="array">
+        {(field) => (
+          <PaymentCardSection
+            title={'Bank Accounts'}
+            paymentCards={data?.accounts}
+            selectedCardIds={field.state.value}
+            onCardToggle={(id) => {
+              const currentSelectedCards = field.state.value;
+              if (currentSelectedCards.includes(id)) {
+                field.setValue(
+                  currentSelectedCards.filter((cardId) => cardId !== id)
+                );
+              } else {
+                field.pushValue(id);
+              }
+            }}
+          />
+        )}
+      </form.Field>
       <div className="mb-4" />
-      <PaymentCardSection title={'Cards'} paymentCards={data?.creditCards} />
+
+      <form.Field name="selectedCreditCardIds" mode="array">
+        {(field) => (
+          <PaymentCardSection
+            title={'Cards'}
+            paymentCards={data?.creditCards}
+            selectedCardIds={field.state.value}
+            onCardToggle={(id) => {
+              const currentSelectedCards = field.state.value;
+              if (currentSelectedCards.includes(id)) {
+                field.setValue(
+                  currentSelectedCards.filter((cardId) => cardId !== id)
+                );
+              } else {
+                field.pushValue(id);
+              }
+            }}
+          />
+        )}
+      </form.Field>
 
       <div className="mb-4" />
       <SharingDetails />
@@ -59,18 +105,33 @@ export const ShareCardDetails = () => {
       </div>
 
       <div className="mb-4" />
-      <div className="flex w-full justify-end gap-4">
-        <Button
-          size={'xl'}
-          variant={'destructive'}
-          className="h-12 w-22 text-xs"
-        >
-          Deny
-        </Button>
-        <Button size={'xl'} className="text-xs" disabled={true}>
-          Allow
-        </Button>
-      </div>
+      <form.Subscribe selector={(state) => state.values}>
+        {(values) => {
+          const hasSelection =
+            values.selectedAccountIds.length > 0 ||
+            values.selectedCreditCardIds.length > 0;
+
+          return (
+            <div className="flex w-full justify-end gap-4">
+              <Button
+                size="xl"
+                variant="destructive"
+                className="h-12 w-22 text-xs"
+              >
+                Deny
+              </Button>
+              <Button
+                size="xl"
+                className="text-xs"
+                disabled={!hasSelection}
+                onClick={form.handleSubmit}
+              >
+                Allow
+              </Button>
+            </div>
+          );
+        }}
+      </form.Subscribe>
     </PageWrapper>
   );
 };

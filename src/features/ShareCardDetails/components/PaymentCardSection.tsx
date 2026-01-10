@@ -8,9 +8,13 @@ import {
 export const PaymentCardSection = ({
   title,
   paymentCards,
+  selectedCardIds,
+  onCardToggle,
 }: {
   title: string;
   paymentCards?: PaymentCardType[];
+  selectedCardIds: number[];
+  onCardToggle: (id: number) => void;
 }) => {
   return (
     <div>
@@ -28,6 +32,8 @@ export const PaymentCardSection = ({
               icon={
                 <Icon className={account.isPrimary ? 'text-primary' : ''} />
               }
+              checked={selectedCardIds.includes(account.id)}
+              onCheckedChange={() => onCardToggle(account.id)}
             />
           );
         })}

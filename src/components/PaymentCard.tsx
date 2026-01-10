@@ -14,10 +14,14 @@ export const PaymentCard = ({
   name,
   lastDigits,
   icon,
+  checked,
+  onCheckedChange,
 }: {
   name: string;
   lastDigits: string;
   icon: ReactNode;
+  checked: boolean;
+  onCheckedChange: () => void;
 }) => {
   return (
     <Item variant="outline" size="sm">
@@ -28,7 +32,7 @@ export const PaymentCard = ({
         <ItemDescription>Ending with {lastDigits}</ItemDescription>
       </ItemContent>
       <ItemActions>
-        <Checkbox />
+        <Checkbox checked={checked} onCheckedChange={onCheckedChange} />
       </ItemActions>
     </Item>
   );
