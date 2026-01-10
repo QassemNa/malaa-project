@@ -78,12 +78,12 @@ function Item({
 }
 
 const itemMediaVariants = cva(
-  'gap-2 group-has-[[data-slot=item-description]]/item:translate-y-0.5 group-has-[[data-slot=item-description]]/item:self-start flex shrink-0 items-center justify-center [&_svg]:pointer-events-none',
+  'gap-2 group-has-[[data-slot=item-description]]/item:translate-y-0.5 group-has-[[data-slot=item-description]]/item:self-center flex shrink-0 items-center justify-center [&_svg]:pointer-events-none',
   {
     variants: {
       variant: {
         default: 'bg-transparent',
-        icon: "[&_svg:not([class*='size-'])]:size-4",
+        icon: "[&_svg:not([class*='size-'])]:size-6",
         image:
           'size-10 overflow-hidden rounded-sm group-data-[size=sm]/item:size-8 group-data-[size=xs]/item:size-6 [&_img]:size-full [&_img]:object-cover',
       },
@@ -127,7 +127,7 @@ function ItemTitle({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="item-title"
       className={cn(
-        'line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4',
+        'line-clamp-1 flex w-fit items-center gap-2 text-xs leading-snug font-medium underline-offset-4',
         className
       )}
       {...props}
@@ -140,7 +140,7 @@ function ItemDescription({ className, ...props }: React.ComponentProps<'p'>) {
     <p
       data-slot="item-description"
       className={cn(
-        'line-clamp-2 text-left text-sm leading-normal font-normal text-muted-foreground group-data-[size=xs]/item:text-xs [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary',
+        'line-clamp-2 text-left text-xs leading-normal font-normal text-muted-foreground group-data-[size=xs]/item:text-xs [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary',
         className
       )}
       {...props}
